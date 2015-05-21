@@ -1,0 +1,43 @@
+<h1>Welcome to the Doctor's Office</h1>
+
+<p>Which doctor do you want to make an appointment with?</p>
+
+<% @doctors.each do |doctor| %>
+
+	<button id="doctor_<%= doctor.id %>">Dr. <%= doctor.name %></button>
+
+<% end %>
+
+<% @doctors.each do |doctor| %>
+<div id="doc_div_<%= doctor.id %>" class="invisible">
+	<%= form_tag create_appointment_path do %>
+		<%= select_tag :patient_id, options_from_collection_for_select(@patients, "id", "name") %>
+		<%= datetime_select :appt_time, :order => [:month, :day] %>
+
+		<div class="invisible">
+			<%= number_field_tag :doctor_id, doctor.id %>
+		</div>
+
+		<%= submit_tag "Make Appointment" %>
+
+	<% end %>
+
+</div>
+
+<script>
+	$(document).ready(function(){
+		$("#doctor_<%= doctor.id %>").click(function(){
+			$("#doc_div_<%= doctor.id %>").slideToggle();
+		});
+	})
+</script>
+
+<% end %>
+
+<% @appointments.each do |appt| %>
+
+	<p>
+		<%= appt.patient.name %> will be seeing Dr. <%= appt.doctor.name %> at <%= appt.appt_time %>
+	</p>
+	
+<% end %>
